@@ -4,6 +4,10 @@ package com.example.companyinventorygui;
  * Supplied class Part.java
  */
 
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
 /**
  *
  * @author Jared Schwery
@@ -12,6 +16,7 @@ public abstract class Part {
     private int id;
     private String name;
     private double price;
+    private int indexValue;
     private int stock;
     private int min;
     private int max;
@@ -64,6 +69,13 @@ public abstract class Part {
      */
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public void setIndexValue(int indexValue) {
+        this.indexValue = indexValue;
+    }
+    public int getIndexValue(){
+        return this.indexValue;
     }
 
     /**

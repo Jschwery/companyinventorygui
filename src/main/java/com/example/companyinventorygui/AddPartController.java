@@ -159,6 +159,8 @@ public class AddPartController implements Initializable {
         }
     }
 
+    //get the selected to
+
     /*Initialize in-house button to be selected*/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -176,6 +178,7 @@ public class AddPartController implements Initializable {
 
         if(selectInHouse.isSelected()){
             InventoryController.addPart(new InHousePart(tempId, name, cost, inventory, min, max, machineId));}
+            InventoryController.indexPartUpdater();
         if(selectOutSourced.isSelected()){
                 InventoryController.addPart(new OutSourcedPart(tempId, name, cost, inventory, min, max, companyName));}
         InventoryController.incrementPartID();

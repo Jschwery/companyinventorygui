@@ -1,14 +1,11 @@
 package com.example.companyinventorygui;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -25,16 +22,6 @@ import java.util.*;
 
 public class InventoryController implements Initializable {
 
-    /*
-     * Current Issue that is happening is when the save button or modify button is pressed, both the allParts list
-     * and the allProducts observable list is being duplicated
-     * */
-
-
-    /*
-    Imports from the inventory page so that we can manipulate the value
-    corresponding to the elements loaded from the FXML file
-     */
     /*Table additions*/
     @FXML
     TableView<Part> inventoryPartsTable;
@@ -164,14 +151,30 @@ public class InventoryController implements Initializable {
     public static Part partThatIsSelected = null;
     public static Product productThatIsSelected = null;
 
+    public static Part returnPartByIndex(int indexOfPart){
+        return allParts.get(indexOfPart);
+    }
+    public static Product returnProductByIndex(int indexOfProduct){
+
+        return allProducts.get(indexOfProduct);
+    }
+
+    public void findSelectedProduct(){
+        productThatIsSelected = returnProductByIndex(getIndexOfProduct(inventoryProductsTable.getSelectionModel().getSelectedItem()));
+    }
+
+    public void findSelectedPart(){
+        partThatIsSelected = returnPartByIndex(getIndexOfPart(inventoryPartsTable.getSelectionModel().getSelectedItem()));
+    }
+
     public void obtainSelectedPart(MouseEvent event) {
         partThatIsSelected = null;
-        partThatIsSelected = allParts.get(inventoryPartsTable.getSelectionModel().getSelectedIndex());
+        findSelectedPart();
     }
 
     public void obtainSelectedProduct(MouseEvent event) {
         partThatIsSelected = null;
-        productThatIsSelected = allProducts.get(inventoryProductsTable.getSelectionModel().getSelectedIndex());
+        findSelectedProduct();
     }
 
     public void closeApplication(ActionEvent event) {
@@ -192,7 +195,6 @@ public class InventoryController implements Initializable {
     public static void addPart(Part part) {
         allParts.add(part);
     }
-
 
     /*search through the products list & return a new list to display
     as the observable list
@@ -233,6 +235,7 @@ public class InventoryController implements Initializable {
     }
 
 
+
     /**
      * When the TextField is written in, or is empty,and the user selects 'Enter'
      * it will then check to see if what was entered is an integer
@@ -243,22 +246,21 @@ public class InventoryController implements Initializable {
      *
      * @param event enter key is pressed
      */
+
+    public static boolean isFiltered;
+
     public void partSearchFilter(KeyEvent event) {
         //getting the input from search
         String checkString = inventoryPartSearch.getText();
         if (event.getCode() == KeyCode.ENTER || Objects.equals(inventoryPartSearch.getText(), "")) {
             if (checkForInteger(checkString)) {//if the search bar contains an integer store it
-                inventoryPartsTable.setItems(checkForMatchingStringPartNumber(checkString));
+                isFiltered = true;
             } else {
                 inventoryPartsTable.setItems(checkPartNameSearch(checkString.toLowerCase()));
+                isFiltered = false;
             }
         }
     }
-
-
-
-
-
 
     //if the parts table is set with items from the refined search,
 
@@ -278,30 +280,17 @@ public class InventoryController implements Initializable {
             }
         }
     }
-    /*TODO
-    * I type in the id number / part Name into the TextField inventoryPartSearch, this returns
-    *
-    *Need to find a way to store the original index of the part in the observableList<Part>
-    *
-    *
-    *
-    *
-    *
-    *
-    * */
 
-
-
-
-
-
-
-
-
-
-
-
-
+    /**
+     * Loops through each of the parts in allParts, and gets the index, then sets the new index of the part
+     * within the part object itself.
+     */
+    public static void indexPartUpdater(){
+        for(Part p : allParts){
+            int tempIndexOfPart = getIndexOfPart(p);
+            p.setIndexValue(tempIndexOfPart);
+        }
+    }
 
 
     /**
@@ -443,6 +432,7 @@ public class InventoryController implements Initializable {
             if (buttonResult.get() == ButtonType.OK) {
                 getAllParts().remove(partToDel);
                 inventoryPartsTable.setItems(allParts);
+                indexPartUpdater();
 
             } else {
                 if (buttonResult.get() == ButtonType.CANCEL) {
@@ -566,6 +556,7 @@ public class InventoryController implements Initializable {
             inventoryProductsProductName.setCellValueFactory(new PropertyValueFactory<>("name"));
             ProductCostColumn.setCellValueFactory(new PropertyValueFactory<>("cost"));
             inventoryProductsInventory.setCellValueFactory(new PropertyValueFactory<>("stock"));
+            indexPartUpdater();
         }
     }
 }

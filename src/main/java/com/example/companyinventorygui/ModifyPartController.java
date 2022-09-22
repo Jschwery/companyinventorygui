@@ -157,7 +157,7 @@ public class ModifyPartController implements Initializable {
         displayErrors();
         Part modifiedPart = null;
 
-        int indexOfSelectedPart = InventoryController.getIndexOfPart(selectedPart);
+        int indexOfSelectedPart = InventoryController.partThatIsSelected.getIndexValue();
         System.out.println("Index of selected part: " + indexOfSelectedPart);
         System.out.println(selectedPart);
 
@@ -171,7 +171,9 @@ public class ModifyPartController implements Initializable {
             InventoryController.updateParts(indexOfSelectedPart, modifiedPart);
         }
         Stage thisStage = (Stage) modifyPartCancel.getScene().getWindow();
+        selectedPart = null;
         thisStage.close();
+
     }
 
     /**
@@ -220,10 +222,6 @@ public class ModifyPartController implements Initializable {
             modifyPartSave.setDisable(true);
         }
     }
-    //TODO
-    //When I filter the results of the observable list the selected part is getting the index
-    //value of the part selected, but it is still grabbing the part from the main list
-    //not the filtered list
 
     public void switchSelected() {
     if(modifySelectInHouse.isSelected()){
@@ -238,6 +236,7 @@ public class ModifyPartController implements Initializable {
 
     public void switchToMainfromModifyPart(ActionEvent event) {
      Stage thisStage = (Stage) modifyPartCancel.getScene().getWindow();
+     selectedPart = null;
      thisStage.close();
     }
 }
