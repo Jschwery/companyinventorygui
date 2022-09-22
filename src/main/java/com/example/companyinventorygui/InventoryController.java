@@ -154,29 +154,50 @@ public class InventoryController implements Initializable {
     public static Part returnPartByIndex(int indexOfPart){
         return allParts.get(indexOfPart);
     }
+
+    /**
+     * @param indexOfProduct takes in the int value of the product Index
+     * @return returns the product at the index passed in
+     */
     public static Product returnProductByIndex(int indexOfProduct){
 
         return allProducts.get(indexOfProduct);
     }
 
+    /**
+     * Sets the selected product from the productTable
+     */
     public void findSelectedProduct(){
         productThatIsSelected = returnProductByIndex(getIndexOfProduct(inventoryProductsTable.getSelectionModel().getSelectedItem()));
     }
 
+    /**
+     * sets the selected part from the partTable
+     */
     public void findSelectedPart(){
         partThatIsSelected = returnPartByIndex(getIndexOfPart(inventoryPartsTable.getSelectionModel().getSelectedItem()));
     }
 
+    /**
+     * @param event mouseClick on the partTable
+     * sets the selectedPart when clicked
+     */
     public void obtainSelectedPart(MouseEvent event) {
-        partThatIsSelected = null;
         findSelectedPart();
     }
 
+    /**
+     * @param event MouseClick event on the Product table
+     *  sets the selected product when clicked
+     */
     public void obtainSelectedProduct(MouseEvent event) {
-        partThatIsSelected = null;
         findSelectedProduct();
     }
 
+    /**
+     * @param event exit button is clicked
+     *              closes the application
+     */
     public void closeApplication(ActionEvent event) {
         Stage currentStage = (Stage) exitApplication.getScene().getWindow();
         currentStage.close();
@@ -192,23 +213,35 @@ public class InventoryController implements Initializable {
         return allParts;
     }
 
+    /**
+     * @param part accepts part to add to the observable list
+     */
     public static void addPart(Part part) {
         allParts.add(part);
     }
 
-    /*search through the products list & return a new list to display
-    as the observable list
-    */
-    //search through the part list to the required index & replace it with the part passed in
 
+    /**
+     * @param index index of the observableList where the part should be updated
+     * @param selectedPart part to update
+     */
     public static void updateParts(int index, Part selectedPart) {
         allParts.set(index, selectedPart);
     }
 
+    /**
+     * @param selectedPart the part to find the index of
+     * @return return the index of the part of interest
+     */
     public static int getIndexOfPart(Part selectedPart) {
         return allParts.indexOf(selectedPart);
     }
 
+    /**
+     * @param selectedProduct the product to find the index of
+     *
+     * @return the int value of the index of the product passed in
+     */
     public static int getIndexOfProduct(Product selectedProduct) {
         return allProducts.indexOf(selectedProduct);
     }
@@ -254,6 +287,7 @@ public class InventoryController implements Initializable {
         String checkString = inventoryPartSearch.getText();
         if (event.getCode() == KeyCode.ENTER || Objects.equals(inventoryPartSearch.getText(), "")) {
             if (checkForInteger(checkString)) {//if the search bar contains an integer store it
+                inventoryPartsTable.setItems(checkForMatchingStringPartNumber(checkString));
                 isFiltered = true;
             } else {
                 inventoryPartsTable.setItems(checkPartNameSearch(checkString.toLowerCase()));
@@ -316,6 +350,12 @@ public class InventoryController implements Initializable {
         }
     }
 
+    /**
+     * @param nameMatch string to filter the products returned in the observable list, if they contain the
+     *                  string passed in, within their name field.
+     * @return returns an observable list that has been filtered if there was a name containing the string passed in
+     * else it will return the original list
+     */
     public ObservableList<Product> checkProductNameSearch(String nameMatch) {
         ObservableList<Product> productNameListAdd = FXCollections.observableArrayList();
         for (Product p : allProducts) {
@@ -330,6 +370,11 @@ public class InventoryController implements Initializable {
         return productNameListAdd;
     }
 
+    /**
+     * @param inputToCheck take in a string to check if the Part Id field matches the entered value
+     *
+     * @return return an observable list of parts with a matching ID, or if none found return the allParts observable list
+     */
     public ObservableList<Part> checkForMatchingStringPartNumber(String inputToCheck) {
         ObservableList<Part> tempListpart = FXCollections.observableArrayList();
         if (checkForInteger(inputToCheck)) {//check if the string entered is Integer
@@ -366,22 +411,6 @@ public class InventoryController implements Initializable {
         }
         return nameListAdd;
     }
-    /*This method takes in a string as a parameter, and will loop through the parts observable list,
-        and extract the information from the parts, getname method which will check to see if the part object's
-        name contains the substring passed in as an argument, if nothing was found it will return the original list
-        else it will return a list with matching criteria
-   */
-
-    //when I get the filtered list, the indexes of the parts in the observable list are what they were -1
-    ObservableList<Part> tempListPart = FXCollections.observableArrayList();
-    ObservableList<Product> tempListProduct = FXCollections.observableArrayList();
-
-    /*When the TextField is written in, or is empty,and the user selects 'Enter'
-     * it will then check to see if what was entered is an integer
-     * if it was an integer then we will parse the text entered with the parseInt method from the Integer class
-     * this will return us with an int value that we store inside partInt
-     * after that we can loop through the observable list which the table
-     * */
 
     Scene scene;
     Stage stage;

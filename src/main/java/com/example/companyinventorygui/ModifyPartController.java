@@ -89,6 +89,7 @@ public class ModifyPartController implements Initializable {
         } else {
             writeErrorsToFile.append("\nEntry for Part Max is of an invalid type. Required: int");
         }
+        //if the selected part is an InHousePart that means the
         if (selectedPart.getClass().getSimpleName().equals("InHousePart")) {
             if (AddPartController.intChecker(String.valueOf(modifyPartMachineID.getText()), "Please enter an int for the 'machineID' field!")) {
                 machineId = Integer.parseInt(String.valueOf(modifyPartMachineID.getText()));
@@ -150,12 +151,10 @@ public class ModifyPartController implements Initializable {
         modifyPartMachineID.setPromptText("Enter Machine ID");
     }
 
-    //getting the
+
     public void saveModifiedPart(ActionEvent event) throws IOException {
         Part selectedPart = InventoryController.partThatIsSelected;
         moddedPartValidator();
-        displayErrors();
-        Part modifiedPart = null;
 
         int indexOfSelectedPart = InventoryController.partThatIsSelected.getIndexValue();
         System.out.println("Index of selected part: " + indexOfSelectedPart);
@@ -163,17 +162,17 @@ public class ModifyPartController implements Initializable {
 
 
         if (selectedPart.getClass().getSimpleName().equals("OutSourcedPart")) {
-            modifiedPart = new OutSourcedPart(selectedPart.getId(), name , cost, inventory, min, max, companyName);
+            OutSourcedPart modifiedPart = new OutSourcedPart(selectedPart.getId(), name , cost, inventory, min, max, companyName);
             InventoryController.updateParts(indexOfSelectedPart,modifiedPart);
         }
-        if (selectedPart.getClass().getSimpleName().equals("OutSourcedPart")) {
-            modifiedPart = new InHousePart(selectedPart.getId(), name, cost, inventory, min, max, machineId);
-            InventoryController.updateParts(indexOfSelectedPart, modifiedPart);
+            else {
+            if(selectedPart.getClass().getSimpleName().equals("OutSourcedPart")) {
+                InHousePart modifiedPart = new InHousePart(selectedPart.getId(), name, cost, inventory, min, max, machineId);
+                InventoryController.updateParts(indexOfSelectedPart, modifiedPart);
+            }
         }
         Stage thisStage = (Stage) modifyPartCancel.getScene().getWindow();
-        selectedPart = null;
         thisStage.close();
-
     }
 
     /**
