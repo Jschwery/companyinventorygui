@@ -53,18 +53,6 @@ public class ModifyProductController{
     Stage modifyProductStage;
 
 
-    public void switchToMainFromAddProduct(ActionEvent event) {
-        try {
-            Parent rootNode = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Inventory.fxml")));
-            modifyProductStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            modifyProductScene = new Scene(rootNode);
-            modifyProductStage.setScene(modifyProductScene);
-            modifyProductStage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
         private final ObservableList<Part> associatedParts = FXCollections.observableArrayList();
         private int id;
         private String name;
@@ -81,8 +69,17 @@ public class ModifyProductController{
             this.min = min;
             this.max = max;
         }
+    public void closeSceneWindow(){
+        Stage stage = (Stage) modifyProductID.getScene().getWindow();
+        stage.close();
+    }
 
-        public int getId() {
+    public void exitBackToInventory(ActionEvent event){
+        closeSceneWindow();
+    }
+
+
+    public int getId() {
             return id;
         }
 

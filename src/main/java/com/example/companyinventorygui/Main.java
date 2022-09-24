@@ -21,7 +21,7 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
         Parent node = FXMLLoader.load((getClass().getResource("Inventory.fxml")));
         Scene scene = new Scene(node);
-        String styleSheet = this.getClass().getResource("styles.css").toExternalForm();
+        String styleSheet = this.getClass().getResource("CSS-Styling/styles.css").toExternalForm();
         scene.getStylesheets().add(styleSheet);
         stage.setTitle("Inventory");
         stage.setScene(scene);

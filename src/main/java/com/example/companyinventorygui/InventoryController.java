@@ -86,42 +86,30 @@ public class InventoryController implements Initializable {
     Set<Part> inventoryPartsTableSet = new HashSet<Part>();
     Set<Product> inventoryProductTableSet = new HashSet<Product>();
 
-
     @FXML
     TableColumn<Product, Number> inventoryProductsProductID;
-
     @FXML
     TextField modifyProductPrice;
-
     @FXML
     TableColumn<Product, String> inventoryProductsProductName;
-
     @FXML
     TextField inventoryProductSearch;
-
     @FXML
     TextField modifyProductMax;
-
     @FXML
     TextField modifyProductID;
-
     @FXML
     Button exitApplication;
-
     @FXML
     TextField modifyProductName;
-
     @FXML
     TextField modifyProductInventory;
-
     @FXML
     TextField modifyProductMin;
-
     @FXML
     Button inventoryProductsDelete;
     @FXML
     TableColumn<Product, Number> inventoryProductsInventory;
-
     @FXML
     TableColumn<Product, Double> ProductCostColumn;
 
@@ -209,7 +197,7 @@ public class InventoryController implements Initializable {
 
     private static final ObservableList<Part> allParts = FXCollections.observableArrayList();
 
-    public ObservableList<Part> getAllParts() {
+    public static ObservableList<Part> getAllParts() {
         return allParts;
     }
 
@@ -219,7 +207,6 @@ public class InventoryController implements Initializable {
     public static void addPart(Part part) {
         allParts.add(part);
     }
-
 
     /**
      * @param index index of the observableList where the part should be updated
@@ -266,8 +253,6 @@ public class InventoryController implements Initializable {
     public void updateProduct(int index, Product selectedProduct) {
         allProducts.set(index, selectedProduct);
     }
-
-
 
     /**
      * When the TextField is written in, or is empty,and the user selects 'Enter'
@@ -326,7 +311,6 @@ public class InventoryController implements Initializable {
         }
     }
 
-
     /**
      * Takes in a string, then search through the product observable list, which is static, and if a match
      * is found add it to the local variable Observable list, which we want to return
@@ -346,6 +330,7 @@ public class InventoryController implements Initializable {
             return tempListProduct;
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "No matching ID was found with the value of: " + inputToCheck);
+            alert.showAndWait();
             return allProducts;
         }
     }
@@ -412,9 +397,6 @@ public class InventoryController implements Initializable {
         return nameListAdd;
     }
 
-    Scene scene;
-    Stage stage;
-
     /*
     each fxml file should have a corresponding controller class
     the controller will have access to the fxml parts by getting the injected results from the @fxml tag
@@ -479,8 +461,7 @@ public class InventoryController implements Initializable {
         Scene addPartScene;
         Stage addPartStage = new Stage();
         addPartScene = new Scene(root);
-        String styleSheet = this.getClass().getResource("addPart.css").toExternalForm();
-        System.out.println(this.getClass());
+        String styleSheet = this.getClass().getResource("CSS-Styling/addPart.css").toExternalForm();
         addPartScene.getStylesheets().add(styleSheet);
         addPartStage.setScene(addPartScene);
         addPartStage.show();
@@ -499,7 +480,6 @@ public class InventoryController implements Initializable {
         addPartStage.show();
     }
 
-
     /*Switch the scene to Modify Product
      * Every scene needs a node, in this case we are using Parent, to store the details loaded in from the FXML
      * When an event triggers this method, we get the source of the event, and then
@@ -511,22 +491,23 @@ public class InventoryController implements Initializable {
         System.out.println("Add part button pressed");
         FXMLLoader loadAddPart = new FXMLLoader(getClass().getResource("ModifyPart.fxml"));
         Parent root = loadAddPart.load();
-        Scene addPartScene;
+        Scene modifyPartScene;
+        String styleSheet = this.getClass().getResource("CSS-Styling/modifyParts.css").toExternalForm();
         Stage addPartStage = new Stage();
-        addPartScene = new Scene(root);
-        addPartStage.setScene(addPartScene);
+        modifyPartScene = new Scene(root);
+        modifyPartScene.getStylesheets().add(styleSheet);
+        addPartStage.setScene(modifyPartScene);
         addPartStage.show();
     }
 
     public void switchToModifyProduct(ActionEvent event) throws IOException {
-        System.out.println("Add part button pressed");
-        FXMLLoader loadAddPart = new FXMLLoader(getClass().getResource("ModifyProduct.fxml"));
-        Parent root = loadAddPart.load();
-        Scene addPartScene;
-        Stage addPartStage = new Stage();
-        addPartScene = new Scene(root);
-        addPartStage.setScene(addPartScene);
-        addPartStage.show();
+        FXMLLoader loadModifyProduct = new FXMLLoader(getClass().getResource("ModifyProduct.fxml"));
+        Parent root = loadModifyProduct.load();
+        Scene modifyProduct;
+        Stage modifyProductStage = new Stage();
+        modifyProduct = new Scene(root);
+        modifyProductStage.setScene(modifyProduct);
+        modifyProductStage.show();
     }
 
     public boolean checkDuplicatePart(ObservableList<Part> partList) {
@@ -563,7 +544,6 @@ public class InventoryController implements Initializable {
             inventoryProductTableSet.add(new Product(1000, "Membrane Keyboard", 35.00, 35, 5, 35));
             inventoryProductTableSet.add(new Product(1010, "Wireless Keyboard", 50.00, 50, 10, 1));
 
-
             //if allParts does not contain duplicate values
             if (checkDuplicatePart(allParts)) {
                 allParts.addAll(inventoryPartsTableSet);
@@ -572,7 +552,6 @@ public class InventoryController implements Initializable {
 
             allProducts.addAll(inventoryProductTableSet);
             inventoryProductsTable.setItems(allProducts);
-
 
             //Set Parts Columns
             inventoryPartsPartID.setCellValueFactory(new PropertyValueFactory<>("id"));

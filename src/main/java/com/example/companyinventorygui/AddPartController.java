@@ -24,16 +24,6 @@ public class AddPartController implements Initializable {
     @FXML
     private RadioButton selectOutSourced;
 
-    @FXML
-    private TableView<Part> partsTable;
-    @FXML
-    private TableColumn<Part, Number> partsPartID;
-    @FXML
-    private TableColumn<Part, String> partspartsPartName;
-    @FXML
-    private TableColumn<Part, Number> partsInventory;
-    @FXML
-    private TableColumn<Part, Number> partsCostUnit;
 
     @FXML
     TextField addPartName;
@@ -118,48 +108,55 @@ public class AddPartController implements Initializable {
      * was an unexpected entry into one of the form fields. Then save the data into placeholders variables, that will later be used to
      * create new part objects to add to the allParts observable list
      */
-    public void partValidator() {
-        if (doubleChecker(addPartCost.getText(),"Please enter a Double for the 'Cost' field!")) {
-            cost = Double.parseDouble(addPartCost.getText());
+    public boolean partValidator() {
+        if (doubleChecker(String.valueOf(addPartCost.getText()),"Please enter a Double for the 'Cost' field!")) {
+            cost = Double.parseDouble(String.valueOf(addPartCost.getText()));
         } else {
-            variableLabel.setText("Please enter a double in the 'Cost' Field!");
+            System.out.println("Cost field check failed");
+            return false;
         }
-        if (intChecker(addPartInventory.getText(),"Please enter an int for the 'Inventory' field!")) {
-            inventory = Integer.parseInt(addPartInventory.getText());
+        if (intChecker(String.valueOf(addPartInventory.getText()),"Please enter an int for the 'Inventory' field!")) {
+            inventory = Integer.parseInt(String.valueOf(addPartInventory.getText()));
         } else {
-            variableLabel.setText("Please enter an Integer value for the 'Inventory' field!");
+            System.out.println("Inventory field check failed");
+            return false;
         }
-        if (intChecker(addPartMax.getText(), "Please enter an int for the 'Max' field!")) {
-            max = Integer.parseInt(addPartMax.getText());
+        if (intChecker(String.valueOf(addPartMax.getText()), "Please enter an int for the 'Max' field!")) {
+            max = Integer.parseInt(String.valueOf(addPartMax.getText()));
         } else {
-            variableLabel.setText("Please enter an Integer value for the 'Max' field!");
+            System.out.println("Part Max field check failed");
+            return false;
         }
         if(stringChecker(addPartName.getText(), "Please enter a String for the 'Name' field!")){
-            name = addPartName.getText();
+            name = String.valueOf(addPartName.getText());
         }else{
-            variableLabel.setText("Please enter a valid String value for 'Name'");
+            System.out.println("Part name field check failed");
+            return false;
         }
-        if (intChecker(addPartMin.getText(), "Please enter an int for the 'Min' field!")) {
-            min = Integer.parseInt(addPartMin.getText());
+        if (intChecker(String.valueOf(addPartMin.getText()), "Please enter an int for the 'Min' field!")) {
+            min = Integer.parseInt(String.valueOf(addPartMin.getText()));
         } else {
-            variableLabel.setText("Please enter an Integer value for the 'Min' field!");
+            System.out.println("Part min field check failed");
+            return false;
         }
         if (selectOutSourced.isSelected()) {
-            if (stringChecker(addMachineIDorCompany.getText(), "Please enter a String for the 'Company Name' field!")) {
+            if (stringChecker(addMachineIDorCompany.getText(), "Please enter a String for the 'company name' field!")){
                 companyName = addMachineIDorCompany.getText();
-            } else {
-                variableLabel.setText("Please enter a valid String value for 'Company Name'");
             }
-
-            if (selectInHouse.isSelected()) {
-                machineId = Integer.parseInt(addMachineIDorCompany.getText());
-            } else {
-                variableLabel.setText("Please enter a valid Integer value for 'Machine ID' ");
+            else {
+                return false;
             }
         }
+        else if (selectInHouse.isSelected()) {
+            if (intChecker(String.valueOf(addMachineIDorCompany.getText()), "Please enter an int for the 'machine ID' field!")) {
+            machineId = Integer.parseInt(String.valueOf(addMachineIDorCompany.getText()));
+            }
+            else {
+                return false;
+            }
+        }
+        return true;
     }
-
-    //get the selected to
 
     /*Initialize in-house button to be selected*/
     @Override
@@ -173,26 +170,31 @@ public class AddPartController implements Initializable {
      * @param event save button Click event to add parts to the observable list
      */
     public void onSaveClick(ActionEvent event) {
-        partValidator();
-        int tempId = InventoryController.partID;
 
-        if(selectInHouse.isSelected()){
-            InventoryController.addPart(new InHousePart(tempId, name, cost, inventory, min, max, machineId));}
-            InventoryController.indexPartUpdater();
-        if(selectOutSourced.isSelected()){
-                InventoryController.addPart(new OutSourcedPart(tempId, name, cost, inventory, min, max, companyName));}
-        InventoryController.incrementPartID();
-        closeSceneWindow();
+        if (partValidator()) {
+
+            int tempId = InventoryController.partID;
+
+            if (selectInHouse.isSelected()) {
+                InventoryController.addPart(new InHousePart(tempId, name, cost, inventory, min, max, machineId));
+            }
+            InventoryController.incrementPartID();
+            if (selectOutSourced.isSelected()) {
+                InventoryController.addPart(new OutSourcedPart(tempId, name, cost, inventory, min, max, companyName));
+            }
+            InventoryController.incrementPartID();
+            closeSceneWindow();
+        }
     }
-
     /**
      * If the outSourced button is selected, then unselect the inHouse button, and change the variable label to 'Company Name'
      * then set the textField entry 9 units to the right on the x-axis to allow space for the text label to fit nicely.
      */
     public void selectOutSourcedButton() {
         selectInHouse.setSelected(false);
+        selectOutSourced.setSelected(true);
         variableLabel.setText("Company Name");
-        addMachineIDorCompany.setLayoutX(125);
+        addMachineIDorCompany.setLayoutX(124);
 
     }
 
@@ -201,6 +203,7 @@ public class AddPartController implements Initializable {
      */
     public void selectInHouseButton() {
         selectOutSourced.setSelected(false);
+        selectInHouse.setSelected(true);
         variableLabel.setText("Machine ID");
         addMachineIDorCompany.setLayoutX(101);
 
