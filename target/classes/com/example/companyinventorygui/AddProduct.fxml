@@ -20,7 +20,7 @@
                   <TableColumn fx:id="productCostUnit" prefWidth="116.0" text="Cost / Unit" />
               </columns>
             </TableView>
-            <TextField fx:id="productPartSearch" layoutX="214.0" layoutY="1.0" />
+            <TextField fx:id="productPartSearch" layoutX="214.0" layoutY="1.0" onKeyPressed="#partSearchFilter" />
          </children>
       </Pane>
       <Pane layoutX="402.0" layoutY="319.0" prefHeight="235.0" prefWidth="374.0">
@@ -53,7 +53,7 @@
       <Label layoutX="25.0" layoutY="298.0" text="MAX" />
       <Label layoutX="222.0" layoutY="298.0" text="MIN" />
       <Button fx:id="saveProduct" layoutX="669.0" layoutY="561.0" mnemonicParsing="false" text="Save" />
-      <Button fx:id="cancelProduct" layoutX="720.0" layoutY="561.0" mnemonicParsing="false" onAction="#switchToMainFromAddProduct" text="Cancel" />
+      <Button fx:id="cancelProduct" layoutX="720.0" layoutY="561.0" mnemonicParsing="false" onAction="#closeSceneWindow" text="Cancel" />
       <Button fx:id="removeAssociatedPart" layoutX="548.0" layoutY="561.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="113.0" text="Remove Part" />
       <Button fx:id="addProductPart" layoutX="735.0" layoutY="264.0" mnemonicParsing="false" text="Add" />
    </children>

@@ -54,7 +54,7 @@
       <Label layoutX="25.0" layoutY="298.0" text="Max" />
       <Label layoutX="222.0" layoutY="298.0" text="Min" />
       <Button fx:id="modifyProductSave" layoutX="669.0" layoutY="561.0" mnemonicParsing="false" text="Save" />
-      <Button fx:id="modifyProductCancel" layoutX="720.0" layoutY="561.0" mnemonicParsing="false" onAction="#switchToMainFromAddProduct" text="Cancel" />
+      <Button fx:id="modifyProductCancel" layoutX="720.0" layoutY="561.0" mnemonicParsing="false" onAction="#exitBackToInventory" text="Cancel" />
       <Button fx:id="modifyProductRemovePart" layoutX="548.0" layoutY="561.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="113.0" text="Remove Part" />
       <Button fx:id="modifyProductAddAssociatedPart" layoutX="735.0" layoutY="264.0" mnemonicParsing="false" text="Add" />
       <Text fx:id="errorDisplay" fill="RED" layoutX="33.0" layoutY="404.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="338.13671875" />
