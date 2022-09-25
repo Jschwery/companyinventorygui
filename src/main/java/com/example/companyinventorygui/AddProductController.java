@@ -113,6 +113,23 @@ public class AddProductController implements Initializable {
         }
         return true;
     }
+    /*
+    * Each product has its own associated parts Observable List
+    * so when the add button is pressed, it will get the selected part value from the
+    * addProductPart table, store all the values from the selected part
+    * into a variables then create a new part each time the add button
+    * is clicked and store it into the products associatedPart observableList
+    *
+    *
+    * when the SAVE button is clicked we can call the validator to
+    * validate each textfield and store their values into variables
+    * and add the product to the allProducts observableList int the inventory controller
+    * */
+
+
+
+
+
 
     public static boolean stringChecker(String checkForString, String textToDisplay) {
         try {
