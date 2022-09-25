@@ -1,0 +1,31 @@
+.root{
+-fx-background-color: #405d27;
+}
+
+#leftPane{
+-fx-background-radius: 30;
+-fx-border-radius 30;
+-fx-border-width:5;
+-fx-background-color: #82b74b;
+-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
+#rightPane{
+-fx-background-radius: 30;
+-fx-border-radius 30;
+-fx-border-width:5;
+-fx-background-color: #82b74b;
+-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
+.button:hover {
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-scale-z: 1.02;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
+#mainLabel{
+-fx-text-fill: #ffffff;
+}
+
+.label{
+-fx-text-fill: #000000;
+}
