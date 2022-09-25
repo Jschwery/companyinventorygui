@@ -20,7 +20,7 @@
                   <TableColumn fx:id="productCostUnit" prefWidth="116.0" text="Cost / Unit" />
               </columns>
             </TableView>
-            <TextField fx:id="productPartSearch" layoutX="214.0" layoutY="1.0" />
+            <TextField fx:id="productPartSearch" layoutX="214.0" layoutY="1.0" onKeyPressed="#partSearchFilter" />
          </children>
       </Pane>
       <Pane layoutX="402.0" layoutY="319.0" prefHeight="235.0" prefWidth="374.0">
