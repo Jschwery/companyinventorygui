@@ -21,6 +21,11 @@ public class Product {
         this.ID = ID;
     }
 
+    public void copy(Product productToCopy){
+
+
+    }
+
     public int getID() {
         return ID;
     }

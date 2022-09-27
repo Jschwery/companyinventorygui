@@ -69,6 +69,9 @@ public class ModifyProductController{
             this.min = min;
             this.max = max;
         }
+        //TODO
+        public void obtainSelectedProductIndex(){
+        }
     public void closeSceneWindow(){
         Stage stage = (Stage) modifyProductID.getScene().getWindow();
         stage.close();
@@ -79,7 +82,7 @@ public class ModifyProductController{
     }
 
 
-    public int getId() {
+        public int getId() {
             return id;
         }
 

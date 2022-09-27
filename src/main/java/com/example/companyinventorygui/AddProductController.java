@@ -16,10 +16,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class AddProductController implements Initializable {
 
@@ -28,7 +25,6 @@ public class AddProductController implements Initializable {
 
     @FXML
     private TableView<Part> addProductPartTable;
-
     @FXML
     private TableColumn<Part, Number> productPartID;
     @FXML
@@ -70,6 +66,9 @@ public class AddProductController implements Initializable {
     @FXML
     private Button addProductPart;
 
+    Product tempProduct = new Product(0, "", 00.00, 0, 0, 1);
+
+    private int id = InventoryController.productID;
     private String name;
     private int inventory;
     private Double cost;
@@ -101,35 +100,12 @@ public class AddProductController implements Initializable {
         }
         try {
             Integer.parseInt(stringToCheck);
-            /*
-            the reason this works is because everything entered into a textField is automatically
-            a String, so even if we type 8 into it, that 8 is still a string
-            so I am using the Integer wrappers class parseInt method to parse the string, and
-            if the box contains a number, it returns true, else it will pass an exception
-            which will then return false, so I will then know that a string was passed in
-            */
+
         } catch (Exception e) {
             return false;
         }
         return true;
     }
-    /*
-    * Each product has its own associated parts Observable List
-    * so when the add button is pressed, it will get the selected part value from the
-    * addProductPart table, store all the values from the selected part
-    * into a variables then create a new part each time the add button
-    * is clicked and store it into the products associatedPart observableList
-    *
-    *
-    * when the SAVE button is clicked we can call the validator to
-    * validate each textfield and store their values into variables
-    * and add the product to the allProducts observableList int the inventory controller
-    * */
-
-
-
-
-
 
     public static boolean stringChecker(String checkForString, String textToDisplay) {
         try {
@@ -200,10 +176,20 @@ public class AddProductController implements Initializable {
     }
 
     Part partThatIsSelected = null;
-    public void obtainSelectedPart() throws NullPointerException {
+    public Part obtainSelectedPart() throws NullPointerException {
         if (addProductPartTable != null) {
             partThatIsSelected = (Part) addProductPartTable.getSelectionModel().getSelectedItem();
+            return partThatIsSelected;
         }
+        return null;
+    }
+
+    public Part obtainSelectedPartFromAssociatedParts() throws NullPointerException {
+        if (associatedPartTable != null) {
+            partThatIsSelected = (Part) associatedPartTable.getSelectionModel().getSelectedItem();
+            return partThatIsSelected;
+        }
+        return null;
     }
 
     public void switchToMainFromAddProduct(ActionEvent event) {
@@ -212,7 +198,7 @@ public class AddProductController implements Initializable {
     }
 
 
-    public boolean partValidator() {
+    public boolean productFieldValidator() {
         if (doubleChecker(String.valueOf(addProductPrice.getText()), "Please enter a Double for the 'Cost' field!")) {
             cost = Double.parseDouble(String.valueOf(addProductPrice.getText()));
         } else {
@@ -246,6 +232,7 @@ public class AddProductController implements Initializable {
         return true;
     }
 
+
     public void closeSceneWindow() {
         Stage stage = (Stage) saveProduct.getScene().getWindow();
         stage.close();
@@ -256,49 +243,97 @@ public class AddProductController implements Initializable {
     }
 
 
-//    public void onAddProduct(ActionEvent event) {
-//
-//        if (partValidator()) {
-//
-//            int tempId = InventoryController.partID;
-//
-//            if (selectInHouse.isSelected()) {
-//                InventoryController.addPart(new InHousePart(tempId, name, cost, inventory, min, max, machineId));
-//            }
-//            InventoryController.incrementPartID();
-//            if (selectOutSourced.isSelected()) {
-//                InventoryController.addPart(new OutSourcedPart(tempId, name, cost, inventory, min, max, companyName));
-//            }
-//            InventoryController.incrementPartID();
-//            closeSceneWindow();
-//        }
-//    }
+    /**
+     *
+     * @param event add part is clicked
+     */
+    public void addButtonClicked(ActionEvent event){
+        Part tempPart = Objects.requireNonNull(obtainSelectedPart());
+            if(tempPart.getClass().getSimpleName().equals("InHousePart")){
+                tempProduct.addAssociatedPart(tempPart);
+            }
+            else if(tempPart.getClass().getSimpleName().equals("OutSourcedPart")){
+                tempProduct.addAssociatedPart(tempPart);
+            }
+            else{
+                System.out.println("Failed to add selected part to associated part");
+            }
+        associatedPartTable.setItems(tempProduct.getAllAssociatedParts());
+    }
+
+
+
+    public void removeButtonClicked(ActionEvent event) {
+        try {
+            Part tempPartToRemove = Objects.requireNonNull(obtainSelectedPartFromAssociatedParts());
+            for (Part tempPart : tempProduct.getAllAssociatedParts()) {
+                if (tempPartToRemove.equals(tempPart)) {
+                    tempProduct.getAllAssociatedParts().remove(tempPart);
+                } else {
+                    System.out.println("No part removed");
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    //now that we have the associatedParts observableList, we need to get
+    //the product info by using the productFieldValidator, go through each of the fields, store the value
+    //in a temp variable. When the save button is clicked, we will create a new product, that will hold this
+    //current Product, with the values of the fields, and the values of the associatedPartList
+    public void saveButtonClicked(ActionEvent event) {
+    if(productFieldValidator()){
+        Product p = new Product(id, name, cost, inventory, min, max);
+        p.associatedParts = tempProduct.getAllAssociatedParts();
+        InventoryController.addProduct(p);
+        closeSceneWindow();
+        InventoryController.incrementProductID();
+        }
+        else{
+        System.out.println("Product was not successfully saved");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Product was not successfully saved");
+        alert.showAndWait();
+        }
+    }
+
+    /*
+    TODO
+    * Each product has its own associated parts Observable List
+    * so when the add button is pressed, it will get the selected part value from the
+    * addProductPart table, store all the values from the selected part
+    * into a variables then create a new part each time the add button
+    * is clicked and store it into the products associatedPart observableList
+    *
+    *
+    * when the SAVE button is clicked we can call the validator to
+    * validate each textfield and store their values into variables
+    * and add the product to the allProducts observableList int the inventory controller
+    * */
+
+    public void onAddProduct(ActionEvent event) {
+
+
+
+            closeSceneWindow();
+
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Product tempProduct = new Product(0, "temp", 00.00, 0, 0, 100000);
         addProductPartTable.setItems(InventoryController.getAllParts());
-
-
+        associatedPartTable.setItems(tempProduct.getAllAssociatedParts());
 
 
         productPartID.setCellValueFactory(new PropertyValueFactory<>("id"));
         productPartName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        productInventory.setCellValueFactory(new PropertyValueFactory<>("price"));
-        productCostUnit.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        productInventory.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        productCostUnit.setCellValueFactory(new PropertyValueFactory<>("price"));
 
         //Set Products columns
-        productAssociatedPartID.setCellValueFactory(new PropertyValueFactory<>("ID"));
+        productAssociatedPartID.setCellValueFactory(new PropertyValueFactory<>("id"));
         productAssociatedPartName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        productAssociatedInventory.setCellValueFactory(new PropertyValueFactory<>("cost"));
-        productAssociatedCostUnit.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        productAssociatedInventory.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        productAssociatedCostUnit.setCellValueFactory(new PropertyValueFactory<>("price"));
     }
 
 }
-
-
-
-/*
-has table view
-Identicle to parts table view main menu
- */

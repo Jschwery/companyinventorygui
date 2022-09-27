@@ -123,13 +123,7 @@ public class InventoryController implements Initializable {
         }
         try {
             Integer.parseInt(stringToCheck);
-            /*
-            the reason this works is because everything entered into a textField is automatically
-            a String, so even if we type 8 into it, that 8 is still a string
-            so I am using the Integer wrappers class parseInt method to parse the string, and
-            if the box contains a number, it returns true, else it will pass an exception
-            which will then return false, so I will then know that a string was passed in
-            */
+
         } catch (Exception e) {
             return false;
         }
@@ -476,6 +470,8 @@ public class InventoryController implements Initializable {
         Scene addPartScene;
         Stage addPartStage = new Stage();
         addPartScene = new Scene(root);
+        String styleSheet = this.getClass().getResource("CSS-Styling/addProduct.css").toExternalForm();
+        addPartScene.getStylesheets().add(styleSheet);
         addPartStage.setScene(addPartScene);
         addPartStage.show();
     }

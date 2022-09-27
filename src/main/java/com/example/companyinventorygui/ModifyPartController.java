@@ -13,7 +13,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ResourceBundle;
 
-
 public class ModifyPartController implements Initializable {
     Scene modifypartScene;
     Stage modifypartstage;
@@ -56,17 +55,7 @@ public class ModifyPartController implements Initializable {
     *
     * what steps do we need in order to do this?
     * Get the current selected parts class, check if it is an InHousePart or OutSourcedPart
-    *
-    *
-    *
     * */
-
-
-
-
-
-
-
 
     @FXML
     Label varIdMachineOrComp;
