@@ -10,14 +10,20 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class ModifyProductController{
+public class ModifyProductController implements Initializable{
+    @FXML
+    private TableView<Part> partListTable;
+    @FXML
+    private TableView<Part> associatedPartTable;
     @FXML
     private TableColumn<Part, Number> modifyProductPartID;
     @FXML
@@ -49,11 +55,34 @@ public class ModifyProductController{
     @FXML
     private TextField modifyProductMin;
 
-    Scene modifyProductScene;
-    Stage modifyProductStage;
+    Product selectedProduct = Objects.requireNonNull(InventoryController.productThatIsSelected);
+
+    public int getProductIndex(Product productToFindIndexOf){
+        return InventoryController.getAllProducts().indexOf(selectedProduct);
+    }
+
+//thisusestheListssetmethod
+//TODO update Product with int index,and modified product
+
+    //TODO
+//displaypopupiftheminis>max
+
+/*
+initialize text entry properties to the selected Products values
+initialize the associated parts to display when this scene is displayed
+parts table should be set to display the parts from the allParts observablelist
+
+delete should delete associatedparts
+add should add associated parts
+on save,validate the text fields
+
+get index of product,//allProducts.indexOf(selectedProduct)
+
+*/
 
 
-        private final ObservableList<Part> associatedParts = FXCollections.observableArrayList();
+
+    private final ObservableList<Part> associatedParts = FXCollections.observableArrayList();
         private int id;
         private String name;
         private Double price;
@@ -69,9 +98,10 @@ public class ModifyProductController{
             this.min = min;
             this.max = max;
         }
-        //TODO
-        public void obtainSelectedProductIndex(){
-        }
+
+
+
+
     public void closeSceneWindow(){
         Stage stage = (Stage) modifyProductID.getScene().getWindow();
         stage.close();
@@ -139,11 +169,43 @@ public class ModifyProductController{
         }
 
         public ObservableList<Part> getAssociatedParts() {
-
-            return FXCollections.observableArrayList();
+            return selectedProduct.getAllAssociatedParts();
         }
+/*
+need to get the selected products associated list
+ */
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        //column set cellvaluefactory (new property value factory<>("attribute from the product to go into the column")
+
+        partListTable.setItems(InventoryController.getAllParts());
+        associatedPartTable.setItems(selectedProduct.associatedParts);
+
+        //setting the allParts table with the values of the currently available parts
+        modifyProductPartID.setCellValueFactory(new PropertyValueFactory<>("id"));
+        modifyProductPartName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        modifyProductInventoryColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        modifyProductCostUnit.setCellValueFactory(new PropertyValueFactory<>("price"));
+
+        //setting the associated parts table with the values of the selected products associatedParts
+        modifyAssociatedPartID.setCellValueFactory(new PropertyValueFactory<>("id"));
+        modifyAssociatedPartName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        modifyAssociatedInventory.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        modifyAssociatedCostUnit.setCellValueFactory(new PropertyValueFactory<>("price"));
 
 
+        modifyProductID.setText(String.valueOf(selectedProduct.getID()));
+        modifyProductName.setText(String.valueOf(selectedProduct.getName()));
+        modifyProductMin.setText(String.valueOf(selectedProduct.getMin()));
+        modifyProductMax.setText(String.valueOf(selectedProduct.getMax()));
+        modifyProductPrice.setText(String.valueOf(selectedProduct.getPrice()));
+        modifyProductInventory.setText(String.valueOf(selectedProduct.getStock()));
+
+
+
+
+    }
 }
 
 

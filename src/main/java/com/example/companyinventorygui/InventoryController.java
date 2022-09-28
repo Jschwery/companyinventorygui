@@ -240,7 +240,7 @@ public class InventoryController implements Initializable {
         allProducts.add(product);
     }
 
-    public ObservableList<Product> getAllProducts() {
+    public static ObservableList<Product> getAllProducts() {
         return allProducts;
     }
 
